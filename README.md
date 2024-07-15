@@ -6,7 +6,6 @@ for more detailed information please check:
 https://docs.koii.network/run-a-node/task-nodes/Running-on-VPS
 
 
-
 **-Update the apt**
 ```
 sudo apt update
@@ -34,7 +33,7 @@ koii --version
 ```
 **-configure the testnet url**
 ```
-koii config set --url https://testnet.koii.live
+koii config set --url https://testnet.koii.network/
 ```
 **-check if it works**
 ```
@@ -44,36 +43,56 @@ koii balance
 ```
 koii-keygen new -o /root/.config/koii/id.json
 ```
+Now update your .env-local file:
+
+```
+cd VPS-task
+nano .env-local
+```
+Change ENVIRONMENT from development to production
+
+```
+ENVIRONMENT="production"
+```
+Set initial staking wallet balance to whatever you want (keep in mind this should bigger than all staked koii in all of the tasks combined):
+
+```
+INITIAL_STAKING_WALLET_BALANCE=4
+```
+Change taskID to the new task id, for example the free token task:
+
+```
+TASKS="Gz2xuLQW1scgiasVLfefteifwWj4GnCJCt1SyYTSr3L4"
+```
 **-install docker**
 ```
-sudo apt install docker
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$UBUNTU_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 **-check if docker-compose was installed proberly**
 ```
-docker-compose --version
+docker compose --version
 ```
 **-run the docker ((you have to be in the VPS-Task directory))**
 ```
-docker-compose up
-```
-
-**if you are facing an error when using docker-compose up**
-**-check where docker-compose is installed**
-```
-which docker-compose 
-```
-**-update the docker-compose library**
-```
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-```
-**-give the system ther permission**
-```
-sudo chmod +x /usr/local/bin/docker-compose
+docker compose up
 ```
 
 **-If it docker-compose up is running properly then press ctrl + c then write**
 ```
-docker-compose up -d
+docker compose up -d
 ```
 
 **-this will run docker in the background**
@@ -82,7 +101,6 @@ docker-compose up -d
 ```
 docker logs -f --tail 10 task_node
 ```
-
 
 **To Claim rewards**
 **-install npm library**
@@ -98,9 +116,9 @@ npx @_koii/create-task-cli@latest
 
 **-then choose claim rewards for this example i will use the free token Task**
 
-**Task id:** GbumTdsj7hcPZKGbExTFLxQ4Cj8FeQFvH7NZWCahYows
+**Task id:** Gz2xuLQW1scgiasVLfefteifwWj4GnCJCt1SyYTSr3L4
 
-**stakePotAccount:** stakepotaccount8BKM1uyj4QRi6TvbwhJA6JGMnBsL
+**stakePotAccount:** stakepotaccountvNjz8uPsh9ar4NJJK6euYcgxjSj2
 
 **address that the funds will be transfered to:** your_wallet_address
 
@@ -110,67 +128,5 @@ npx @_koii/create-task-cli@latest
 ##
 --------------------------------------------------------------------------
 ##
-**To update your VPS node to testnet 2**
-
-If you have staked koii in the task first unstake all of your koii using :
-
-```
-npx @_koii/create-task-cli@latest
-```
-
-After you emptied the stake wallet, remove the VPS-task directory:
-
-```
-rm -r VPS-task/
-```
-
-Download the new VPS-task:
-
-```
-git clone https://github.com/koii-network/VPS-task
-```
-
-Now you need to change the address for the koii cli:
-
-```
-koii config set --url https://testnet.koii.network/
-```
-
-Now update your .env-local file:
-
-```
-cd VPS-task
-nano .env-local
-```
-
-Change ENVIRONMENT from development to production 
-
-```
-ENVIRONMENT="production"
-```
-
-Set initial staking wallet balance to whatever you want (keep in mind this should bigger than all staked koii in all of the tasks combined):
-
-```
-INITIAL_STAKING_WALLET_BALANCE=4
-```
-
-Change K2_NODE_URL to the new testnet URL:
-
-```
-K2_NODE_URL="https://testnet.koii.network"
-```
-
-Change taskID to the new task id, for example the free token task:
-
-```
-TASKS="GbumTdsj7hcPZKGbExTFLxQ4Cj8FeQFvH7NZWCahYows"
-```
-
-Now run the task:
-
-```
-docker-compose up -d
-```
 
 
