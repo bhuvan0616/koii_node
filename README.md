@@ -83,7 +83,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 ```
 **-check if docker-compose was installed proberly**
 ```
-docker compose --version
+docker compose version
 ```
 **-run the docker ((you have to be in the VPS-Task directory))**
 ```
